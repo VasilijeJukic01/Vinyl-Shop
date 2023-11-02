@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<script src="song.js"></script>
+	<head>
+		<title>Vinyl Whirl</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+		<link rel="stylesheet" href="main.css"> 
+	</head>
+	<body>
+		<main class="container">
+			<div class="row">
+				<nav class="navbar navbar-expand-sm bg-light navbar-light">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<a class="navbar-brand">
+								<img src="logo.png" alt="logo" width="380" height="100">
+							</a>
+						</div>
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link" href="index.html">Dashboard</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link active" href="songs.html">Offer</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="orders.html">Orders</a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+				<nav class="navbar navbar-expand-sm bg-warning navbar-dark"></nav>
+			</div>
+			<h1>Song</h1>
+			<form id="form" method="post" action="http://postman-echo.com/post">
+				<div class="mb-3 mt-3">
+					<label for="name" class="form-label">Name:</label>
+					<input type="text" class="form-control" id="name" placeholder="Input song" name="name" required>
+				</div>
+				<div class="mb-3 mt-3">
+					<label for="performer" class="form-label">Performer:</label>
+					<input type="text" class="form-control" id="performer" placeholder="Input performer" name="performer" required>
+				</div>
+				<div class="mb-3">
+					<label for="description" class="form-label">Description:</label>
+					<textarea id="description" name="description" class="form-control" placeholder="Input description"></textarea>
+				<div class="mb-3">
+					<div class="row">
+						<div class="col-md-6">
+							<label for="category" class="form-label">Category:</label>
+							<select class="form-select" name="category" id="category">
+								<option value="1">Pop</option>
+								<option value="2">Rock</option>
+								<option value="3">Dance</option>
+								<option value="3">Rap</option>
+								<option value="3">Country</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label for="price" class="form-label">Price:</label>
+							<input type="number" min="0" step="1" required id="price" name="price" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div>
+					<label for="name">Features:</label>
+					<div class="input-group mb-3">
+						<select class="form-select" id="feature-list">
+							<option></option>
+								<option value="1">12" LP</option>
+								<option value="2">33 RPM</option>
+								<option value="3">Gatefold Cover</option>
+								<option value="4">180g Vinyl</option>
+								<option value="5">Limited Edition</option>
+						</select>    
+						<button class="btn btn-success" type="button" id="add-feature">+</button>
+					</div>
+					<div id="features">
+						<input type="hidden" name="features" id="features-input">
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="row">
+						<div class="col-md-6">
+							<button class="btn btn-primary">Save</button>
+							<a href="songs.html" class="btn btn-link">Go Back</a>
+							<a href="#" class="btn btn-danger">Delete</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</main>
+	</body>
+</html>
