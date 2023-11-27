@@ -1,4 +1,5 @@
 const express = require("express");
+const {Category} = require("../models");
 const route = express.Router();
 
 route.use(express.json());
@@ -8,7 +9,8 @@ module.exports = route;
 
 route.get("/", async (req, res) => {
     try{
-        return res.json("All categories");
+        const categories = await Category.findAll();
+        return res.json(categories);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -17,7 +19,8 @@ route.get("/", async (req, res) => {
 
 route.get("/:id", async (req, res) => {
     try{
-        return res.json("Category with id=" + req.params.id);
+        const category = await Category.findByPk(req.params.id);
+        return res.json(category);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -26,7 +29,8 @@ route.get("/:id", async (req, res) => {
 
 route.post("/", async (req, res) => {
     try{
-        return res.json("Category input with req.body");
+        const newCategory = await Category.create(req.body);
+        return res.json(newCategory);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -35,7 +39,10 @@ route.post("/", async (req, res) => {
 
 route.put("/:id", async (req, res) => {
     try{
-        return res.json("Change data of category with id="+req.params.id+" with data req.body");
+        const category = await Category.findByPk(req.params.id);
+        category.name = req.body.name;
+        await category.save();
+        return res.json(category);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -44,7 +51,9 @@ route.put("/:id", async (req, res) => {
 
 route.delete("/:id", async (req, res) => {
     try{
-        return res.json(req.params.id);
+        const category = await Category.findByPk(req.params.id);
+        await category.destroy();
+        return res.json(category.id);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });

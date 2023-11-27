@@ -1,4 +1,5 @@
 const express = require("express");
+const {Order} = require("../models");
 const route = express.Router();
 
 route.use(express.json());
@@ -8,7 +9,8 @@ module.exports = route;
 
 route.get("/", async (req, res) => {
     try{
-        return res.json("All orders");
+        const orders = await Order.findAll();
+        return res.json(orders);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -17,7 +19,8 @@ route.get("/", async (req, res) => {
 
 route.get("/:id", async (req, res) => {
     try{
-        return res.json("Order with id=" + req.params.id);
+        const order = await Order.findByPk(req.params.id);
+        return res.json(order);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -26,7 +29,8 @@ route.get("/:id", async (req, res) => {
 
 route.post("/", async (req, res) => {
     try{
-        return res.json("Order input with req.body");
+        const newOrder = await Order.create(req.body);
+        return res.json(newOrder);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -35,7 +39,15 @@ route.post("/", async (req, res) => {
 
 route.put("/:id", async (req, res) => {
     try{
-        return res.json("Change data of order with id="+req.params.id+" with data req.body");
+        const order = await Order.findByPk(req.params.id);
+        order.order_time = req.body.order_time;
+        order.schedule_time = req.body.schedule_time;
+        order.status = req.body.status;
+        order.address = req.body.address;
+        order.phone = req.body.phone;
+        order.name_surname = req.body.name_surname;
+        await order.save();
+        return res.json(order);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -44,7 +56,9 @@ route.put("/:id", async (req, res) => {
 
 route.delete("/:id", async (req, res) => {
     try{
-        return res.json(req.params.id);
+        const order = await Order.findByPk(req.params.id);
+        await order.destroy();
+        return res.json(order.id);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });

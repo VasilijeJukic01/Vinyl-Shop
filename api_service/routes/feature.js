@@ -1,4 +1,5 @@
 const express = require("express");
+const {Feature} = require("../models");
 const route = express.Router();
 
 route.use(express.json());
@@ -8,7 +9,8 @@ module.exports = route;
 
 route.get("/", async (req, res) => {
     try{
-        return res.json("All features");
+        const features = await Feature.findAll();
+        return res.json(features);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -17,7 +19,8 @@ route.get("/", async (req, res) => {
 
 route.get("/:id", async (req, res) => {
     try{
-        return res.json("Feature with id=" + req.params.id);
+        const feature = await Feature.findByPk(req.params.id);
+        return res.json(feature);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -26,7 +29,8 @@ route.get("/:id", async (req, res) => {
 
 route.post("/", async (req, res) => {
     try{
-        return res.json("Feature input with req.body");
+        const newFeature = await Feature.create(req.body);
+        return res.json(newFeature);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -35,7 +39,10 @@ route.post("/", async (req, res) => {
 
 route.put("/:id", async (req, res) => {
     try{
-        return res.json("Change data of feature with id="+req.params.id+" with data req.body");
+        const feature = await Feature.findByPk(req.params.id);
+        feature.name = req.body.name;
+        await feature.save();
+        return res.json(feature);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });
@@ -44,7 +51,9 @@ route.put("/:id", async (req, res) => {
 
 route.delete("/:id", async (req, res) => {
     try{
-        return res.json(req.params.id);
+        const feature = await Feature.findByPk(req.params.id);
+        await feature.destroy();
+        return res.json(feature.id);
     } catch(err){
         console.log(err);
         res.status(500).json({ error: "Error", data: err });

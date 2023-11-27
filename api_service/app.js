@@ -1,5 +1,5 @@
 const express = require('express');
-
+const {sequelize, Song, Category, SongFeature, Feature, OrderItem, Order} = require("./models");
 const app = express();
 
 app.get('/', (req, res) => {
@@ -15,4 +15,8 @@ app.use("/order", orderRoutes);
 const featureRoutes = require("./routes/feature.js");
 app.use("/feature", featureRoutes);
 
-app.listen(9000);
+app.listen({ port:8000 }, async () => {
+    console.log("Started server on localhost:8000");
+    await sequelize.sync({force:false});
+    console.log("DB synced");
+});
