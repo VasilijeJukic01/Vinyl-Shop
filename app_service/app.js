@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
-app.listen(8000);
+app.listen(9000);
 
 app.use(express.static(path.join(__dirname, 'static')));
 
