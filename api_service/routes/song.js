@@ -1,64 +1,60 @@
 const express = require("express");
-const {Song} = require("../models");
+const { Song } = require("../models");
+const { handleRoute } = require("./crudhelper");
 const route = express.Router();
 
 route.use(express.json());
-route.use(express.urlencoded({extended:true}));
+route.use(express.urlencoded({ extended: true }));
 
 module.exports = route;
 
+const getAllSongs = async () => {
+    return await Song.findAll();
+};
+
+const getSongById = async (id) => {
+    return await Song.findByPk(id);
+};
+
+const createSong = async (songData) => {
+    return await Song.create(songData);
+};
+
+const updateSong = async (id, songData) => {
+    const song = await Song.findByPk(id);
+    const { name, description, price, category_id } = songData;
+
+    song.name = name;
+    song.description = description;
+    song.price = price;
+    song.category_id = category_id;
+
+    await song.save();
+    return song;
+};
+
+const deleteSong = async (id) => {
+    const song = await Song.findByPk(id);
+    await song.destroy();
+    return song.id;
+};
+
 route.get("/", async (req, res) => {
-   try{
-       const songs = await Song.findAll();
-       return res.json(songs);
-   } catch(err){
-    	console.log(err);
-    	res.status(500).json({ error: "Error", data: err });
-   }
+    await handleRoute(req, res, getAllSongs);
 });
 
 route.get("/:id", async (req, res) => {
-   try{
-       const song = await Song.findByPk(req.params.id);
-       return res.json(song);
-   } catch(err){
-   	 console.log(err);
-   	 res.status(500).json({ error: "Error", data: err });
-   }
+    await handleRoute(req, res, getSongById);
 });
 
 route.post("/", async (req, res) => {
-   try{
-       const newSong = await Song.create(req.body);
-       return res.json(newSong);
-   } catch(err){
-   	 console.log(err);
-   	 res.status(500).json({ error: "Error", data: err });
-   }
+    await handleRoute(req, res, createSong);
 });
 
 route.put("/:id", async (req, res) => {
-   try{
-       const song = await Song.findByPk(req.params.id);
-       song.name = req.body.name;
-       song.description = req.body.description;
-       song.price = req.body.price;
-       song.category_id = req.body.category_id;
-       await song.save();
-       return res.json(song);
-   } catch(err){
-   	 console.log(err);
-   	 res.status(500).json({ error: "Error", data: err });
-   }
+    await handleRoute(req, res, updateSong);
 });
 
 route.delete("/:id", async (req, res) => {
-   try{
-       const song = await Song.findByPk(req.params.id);
-       await song.destroy();
-       return res.json(song.id);
-   } catch(err){
-   	 console.log(err);
-   	 res.status(500).json({ error: "Error", data: err });
-   }
+    await handleRoute(req, res, deleteSong);
 });

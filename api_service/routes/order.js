@@ -1,66 +1,54 @@
 const express = require("express");
-const {Order} = require("../models");
+const { Order } = require("../models");
+const { handleRoute } = require("./crudhelper");
 const route = express.Router();
 
 route.use(express.json());
-route.use(express.urlencoded({extended:true}));
+route.use(express.urlencoded({ extended: true }));
 
 module.exports = route;
 
+const getAllOrders = async () => {
+    return await Order.findAll();
+};
+
+const getOrderById = async (id) => {
+    return await Order.findByPk(id);
+};
+
+const createOrder = async (orderData) => {
+    return await Order.create(orderData);
+};
+
+const updateOrder = async (id, orderData) => {
+    const order = await Order.findByPk(id);
+    Object.assign(order, orderData);
+    await order.save();
+    return order;
+};
+
+const deleteOrder = async (id) => {
+    const order = await Order.findByPk(id);
+    await order.destroy();
+    return order.id;
+};
+
 route.get("/", async (req, res) => {
-    try{
-        const orders = await Order.findAll();
-        return res.json(orders);
-    } catch(err){
-        console.log(err);
-        res.status(500).json({ error: "Error", data: err });
-    }
+    await handleRoute(req, res, getAllOrders);
 });
 
 route.get("/:id", async (req, res) => {
-    try{
-        const order = await Order.findByPk(req.params.id);
-        return res.json(order);
-    } catch(err){
-        console.log(err);
-        res.status(500).json({ error: "Error", data: err });
-    }
+    await handleRoute(req, res, getOrderById);
 });
 
 route.post("/", async (req, res) => {
-    try{
-        const newOrder = await Order.create(req.body);
-        return res.json(newOrder);
-    } catch(err){
-        console.log(err);
-        res.status(500).json({ error: "Error", data: err });
-    }
+    await handleRoute(req, res, createOrder);
 });
 
 route.put("/:id", async (req, res) => {
-    try{
-        const order = await Order.findByPk(req.params.id);
-        order.order_time = req.body.order_time;
-        order.schedule_time = req.body.schedule_time;
-        order.status = req.body.status;
-        order.address = req.body.address;
-        order.phone = req.body.phone;
-        order.name_surname = req.body.name_surname;
-        await order.save();
-        return res.json(order);
-    } catch(err){
-        console.log(err);
-        res.status(500).json({ error: "Error", data: err });
-    }
+    await handleRoute(req, res, updateOrder);
 });
 
 route.delete("/:id", async (req, res) => {
-    try{
-        const order = await Order.findByPk(req.params.id);
-        await order.destroy();
-        return res.json(order.id);
-    } catch(err){
-        console.log(err);
-        res.status(500).json({ error: "Error", data: err });
-    }
+    await handleRoute(req, res, deleteOrder);
 });

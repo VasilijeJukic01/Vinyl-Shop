@@ -2,50 +2,81 @@
 let id = null;
 
 function validation() {
-	let valid = true;
-	if (document.getElementById("name").value.length < 3) {
-		valid = false;
-		document.getElementById("name").classList.add("error");
-		document.getElementById("name").classList.remove("success");
+	const nameInput = document.getElementById("name");
+	const nameValue = nameInput.value;
+
+	if (nameValue.length < 3) {
+		nameInput.classList.add("error");
+		nameInput.classList.remove("success");
+		return false;
 	}
 	else {
-		document.getElementById("name").classList.add("success");
-		document.getElementById("name").classList.remove("error");
+		nameInput.classList.add("success");
+		nameInput.classList.remove("error");
+		return true;
 	}
-	return valid;
+}
+
+function addFeature(id) {
+	const featureList = document.getElementById("feature-list");
+	const selectedOption = featureList.querySelector(`option[value='${id}']`);
+	selectedOption.disabled = true;
+	featureList.selectedIndex = 0;
+
+	const name = selectedOption.innerHTML;
+
+	const span = createHTMLElement("span", ["badge", "bg-secondary"], { "data-id": id }, name);
+	const button = createHTMLElement("button", ["btn", "btn-default", "btn-sm"], {}, "X");
+
+	span.appendChild(button);
+	document.getElementById("features").appendChild(span);
+	document.getElementById("features").appendChild(document.createTextNode(" "));
+
+	button.addEventListener("click", function () {
+		const featureId = this.parentNode.dataset.id;
+		this.parentNode.parentNode.removeChild(this.parentNode);
+		document.querySelector(`#feature-list > option[value='${featureId}']`).disabled = false;
+	});
+}
+
+function createHTMLElement(tag, classes, attributes, innerHTML) {
+	const element = document.createElement(tag);
+	classes.forEach(className => element.classList.add(className));
+	Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+	element.innerHTML = innerHTML;
+	return element;
 }
 
 window.addEventListener("load", function(){
-
 	let url = new URL(window.location.href);
 	id = url.searchParams.get("id");
-	fetch("http://localhost:8000/song/"+id)
+
+	fetch(`http://localhost:8000/song/${id}`)
 		.then(resp => resp.json())
 		.then(data => {
-				document.getElementById("name").value = data.name;
-				document.getElementById("performer").value = data.performer;
-				document.getElementById("description").value = data.description;
-				document.getElementById("category").value = data.category_id;
-				document.getElementById("price").value = data.price;
-				for(let i = 0; i < data.features.length; i++){
-					addFeature(data.features[i]);
-				}
-				console.log(data);
-			}
-		)
+			const { name, performer, description, category_id, price, features } = data;
+			document.getElementById("name").value = name;
+			document.getElementById("performer").value = performer;
+			document.getElementById("description").value = description;
+			document.getElementById("category").value = category_id;
+			document.getElementById("price").value = price;
+
+			features.forEach(addFeature);
+			console.log(data);
+		})
 		.catch(err => console.log(err));
 
 	document.getElementById("form").addEventListener("submit", function(event){
 		event.preventDefault();
-		let valid = validation();
-		if(!valid) return;
+		if(!validation()) return;
 
-		let newSong = {};
-		newSong.name = document.getElementById("name").value;
-		newSong.performer = document.getElementById("performer").value;
-		newSong.description = document.getElementById("description").value;
-		newSong.category_id = document.getElementById("category").value;
-		newSong.price = document.getElementById("price").value;
+		const newSong = {
+			name: document.getElementById("name").value,
+			performer: document.getElementById("performer").value,
+			description: document.getElementById("description").value,
+			category_id: document.getElementById("category").value,
+			price: document.getElementById("price").value
+		};
 
 		fetch("http://localhost:8000/song/", {
 			method:"POST",
@@ -60,8 +91,7 @@ window.addEventListener("load", function(){
 	});
 
 	document.getElementById("name").addEventListener("keypress", function(){
-		this.classList.remove('success'); 
-		this.classList.remove('error'); 
+		this.classList.remove('success', 'error');
 	});
 	
 	document.getElementById("add-feature").addEventListener("click", function(){
@@ -73,37 +103,4 @@ window.addEventListener("load", function(){
         addFeature(id);
     });
 	
-	function addFeature(id){
-		document.querySelector(`#feature-list > option[value='${id}']`).disabled = true;
-		document.getElementById("feature-list").selectedIndex = 0;
-		
-		let name = document.querySelector(`#feature-list > option[value='${id}']`).innerHTML;
-		
-		let span = document.createElement("span");
-		span.classList.add("badge");
-		span.classList.add("bg-secondary");
-		span.dataset.id = id;
-		span.innerHTML = name;
-		
-		let button = document.createElement("button");
-		button.type="button";
-		button.classList.add("btn");
-		button.classList.add("btn-default");
-		button.classList.add("btn-sm");
-		button.innerHTML = "X";
-
-		span.appendChild(button);
-		document.getElementById("features").appendChild(span);
-		
-		document.getElementById("features").appendChild(document.createTextNode(" "));
-
-		button.addEventListener("click", function(){
-			let id = this.parentNode.dataset.id;
-			this.parentNode.parentNode.removeChild(this.parentNode);
-			document.querySelector(`#feature-list > option[value='${id}']`).disabled = false;
-		});
-	}
-	
 });
-
-

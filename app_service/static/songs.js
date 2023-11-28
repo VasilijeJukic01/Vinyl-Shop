@@ -1,55 +1,55 @@
+function fetchSongCategory(categoryId) {
+	return fetch(`http://localhost:8000/category/${categoryId}`)
+		.then(response => response.json());
+}
+
+function createTableCell(value) {
+	const td = document.createElement("td");
+	td.innerHTML = value;
+	return td;
+}
+
+function createEditLink(songId) {
+	const editLink = document.createElement("a");
+	editLink.className = "btn btn-primary";
+	editLink.href = `song.html?id=${songId}`;
+	editLink.innerHTML = "Edit";
+	return editLink;
+}
+
+function createTableRow(song, category) {
+	const tr = document.createElement("tr");
+
+	tr.appendChild(createTableCell(song.name));
+	tr.appendChild(createTableCell(song.performer));
+	tr.appendChild(createTableCell(category.name));
+	tr.appendChild(createTableCell(song.description));
+	tr.appendChild(createTableCell(song.price));
+
+	const editCell = document.createElement("td");
+	editCell.appendChild(createEditLink(song.id));
+	tr.appendChild(editCell);
+
+	return tr;
+}
+
 function dataFetch() {
 	fetch('http://localhost:8000/song/')
 		.then(response => response.json())
 		.then(data => {
 			console.log(data);
 			const tableBody = document.getElementById("list");
-			while (tableBody.firstChild) {
-				tableBody.removeChild(tableBody.firstChild);
-			}
+			tableBody.innerHTML = '';
 
 			const promises = data.map(song => {
-					return fetch(`http://localhost:8000/category/${song.category_id}`)
-						.then(response => response.json())
-						.then(category => ({song, category}));
-				}
-			);
+				return fetchSongCategory(song.category_id)
+					.then(category => ({ song, category }));
+			});
 
 			Promise.all(promises)
 				.then(results => {
 					results.forEach(({ song, category }) => {
-						let tr = document.createElement("tr");
-
-						let tdName = document.createElement("td");
-						tdName.innerHTML = song.name;
-						tr.appendChild(tdName);
-
-						let tdPerformer = document.createElement("td");
-						tdPerformer.innerHTML = song.performer;
-						tr.appendChild(tdPerformer);
-
-						let tdCategory = document.createElement("td");
-						tdCategory.innerHTML = category.name;
-						tr.appendChild(tdCategory);
-
-						let tdDescription = document.createElement("td");
-						tdDescription.innerHTML = song.description;
-						tr.appendChild(tdDescription);
-
-						let tdPrice = document.createElement("td");
-						tdPrice.innerHTML = song.price;
-						tr.appendChild(tdPrice);
-
-						let td5 = document.createElement("td");
-
-						let editLink = document.createElement("a");
-						editLink.className = "btn btn-primary";
-						editLink.href = "song.html?id=" + song.id;
-						editLink.innerHTML = "Edit";
-
-						td5.appendChild(editLink);
-						tr.appendChild(td5);
-
+						const tr = createTableRow(song, category);
 						tableBody.appendChild(tr);
 					});
 				});
@@ -58,12 +58,5 @@ function dataFetch() {
 			console.error('Error:', error);
 		});
 }
-
-/*
-function fetchDataPeriodically() {
-    dataFetch();
-    setInterval(dataFetch, 5000);
-}
-*/
 
 window.addEventListener("load", dataFetch);
