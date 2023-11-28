@@ -1,27 +1,62 @@
+
+let id = null;
+
+function validation() {
+	let valid = true;
+	if (document.getElementById("name").value.length < 3) {
+		valid = false;
+		document.getElementById("name").classList.add("error");
+		document.getElementById("name").classList.remove("success");
+	}
+	else {
+		document.getElementById("name").classList.add("success");
+		document.getElementById("name").classList.remove("error");
+	}
+	return valid;
+}
+
 window.addEventListener("load", function(){
-	document.getElementById("form").addEventListener("submit", function(){
-		let valid = true
-		if (document.getElementById("name").value.length < 3) {
-			valid = false
-			
-			event.preventDefault();
-			
-			document.getElementById("name").classList.add("error");
-			document.getElementById("name").classList.remove("success");
-		}
-		else {
-			document.getElementById("name").classList.add("success");
-			document.getElementById("name").classList.remove("error");
-			
-			let spans = document.querySelectorAll("#features > span.badge");
-			let niz = [];
-			for(let i = 0; i < spans.length; i++){
-			   niz.push(spans[i].dataset.id);
+
+	let url = new URL(window.location.href);
+	id = url.searchParams.get("id");
+	fetch("http://localhost:8000/song/"+id)
+		.then(resp => resp.json())
+		.then(data => {
+				document.getElementById("name").value = data.name;
+				document.getElementById("performer").value = data.performer;
+				document.getElementById("description").value = data.description;
+				document.getElementById("category").value = data.category_id;
+				document.getElementById("price").value = data.price;
+				for(let i = 0; i < data.features.length; i++){
+					addFeature(data.features[i]);
+				}
+				console.log(data);
 			}
-			
-			document.getElementById("features-input").value = JSON.stringify(niz);
-		}
-		return valid
+		)
+		.catch(err => console.log(err));
+
+	document.getElementById("form").addEventListener("submit", function(event){
+		event.preventDefault();
+		let valid = validation();
+		if(!valid) return;
+
+		let newSong = {};
+		newSong.name = document.getElementById("name").value;
+		newSong.performer = document.getElementById("performer").value;
+		newSong.description = document.getElementById("description").value;
+		newSong.category_id = document.getElementById("category").value;
+		newSong.price = document.getElementById("price").value;
+
+		fetch("http://localhost:8000/song/", {
+			method:"POST",
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(newSong)
+		})
+			.then(succ => succ.json())
+			.then(() => {
+				window.location.href='/songs.html';
+			})
+			.catch(err => console.log(err));
 	});
 
 	document.getElementById("name").addEventListener("keypress", function(){

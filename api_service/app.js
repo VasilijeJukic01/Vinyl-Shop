@@ -1,6 +1,12 @@
 const express = require('express');
-const {sequelize, Song, Category, SongFeature, Feature, OrderItem, Order} = require("./models");
+const {sequelize} = require("./models");
+const cors = require("cors");
 const app = express();
+
+const corsOptions = {
+    origin: ['http://localhost:9000', 'http://127.0.0.1:9000']
+};
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Hello from REST API service');
