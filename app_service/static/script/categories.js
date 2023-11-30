@@ -14,7 +14,6 @@ function createEditLink(categoryId) {
 
 function createTableRow(category) {
     const tr = document.createElement("tr");
-
     tr.appendChild(createTableCell(category.name));
 
     const editCell = document.createElement("td");

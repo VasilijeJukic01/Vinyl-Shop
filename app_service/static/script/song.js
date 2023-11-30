@@ -156,4 +156,30 @@ window.addEventListener("load", function(){
 		});
 	}
 
+	const selector = document.getElementById("category");
+	if (selector) {
+		fetch("http://localhost:8000/category")
+			.then(resp => resp.json())
+			.then(data => {
+				data.forEach(category => {
+					const option = createHTMLElement("option", [], { value: category.id }, category.name);
+					selector.appendChild(option);
+				});
+			})
+			.catch(err => console.log(err));
+	}
+
+	const featureSelector = document.getElementById("feature-list");
+	if (featureSelector) {
+		fetch("http://localhost:8000/feature")
+			.then(resp => resp.json())
+			.then(data => {
+				data.forEach(feature => {
+					const option = createHTMLElement("option", [], { value: feature.id }, feature.name);
+					featureSelector.appendChild(option);
+				});
+			})
+			.catch(err => console.log(err));
+	}
+
 });

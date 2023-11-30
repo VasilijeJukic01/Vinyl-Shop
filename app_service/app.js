@@ -1,7 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
 const path = require('path');
-const fs = require('fs');
 const bp = require('body-parser');
 
 const app = express();
