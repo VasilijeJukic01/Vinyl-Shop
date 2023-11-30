@@ -26,32 +26,9 @@ app.post('/new-song', (req, res) => {
 	const {error} = schema.validate(req.body);
 	
     if(error){
-		res.send("Error: " + error.details[0].message);
-		return;
+		return res.status(400).json({ error: error.details[0].message });
     }
 	req.body.description.replace(/\r?\n|\r/g, '<br>');
-	fs.appendFile("songs.txt", '\n' + JSON.stringify(req.body), (err) => {
-		if (err) {
-			console.error('Error writing to file:', err);
-			res.status(500).send("Error writing to file");
-			return;
-		}
-		res.send("Message has been sent");
-	});
-})
-
-app.get("/songs", (req, res) => {
-	fs.readFile('songs.txt', 'utf8', (err, data) => {
-		if (err) {
-			console.error('Error reading file:', err);
-			res.status(500).send({ error: "Error" });
-			return;
-		}
-
-		const lines = data.split('\n');
-		const songs = lines.map(line => JSON.parse(line));
-		res.json(songs);
-	});
 })
 
 app.listen(9000, () => {

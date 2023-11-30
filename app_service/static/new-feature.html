@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-	<script src="song.js"></script>
+	<script src="script/feature.js"></script>
 	<head>
 		<title>Vinyl Whirl</title>
 		<meta charset="utf-8">
@@ -19,7 +19,9 @@
 						</div>
 						<ul class="navbar-nav">
 							<li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
-							<li class="nav-item"><a class="nav-link active" href="songs.html">Offer</a></li>
+							<li class="nav-item"><a class="nav-link" href="songs.html">Offer</a></li>
+							<li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
+							<li class="nav-item"><a class="nav-link active" href="features.html">Features</a></li>
 							<li class="nav-item"><a class="nav-link" href="orders.html">Orders</a></li>
 						</ul>
 					</div>
@@ -27,7 +29,7 @@
 				<nav class="navbar navbar-expand-sm bg-warning navbar-dark"></nav>
 			</div>
 			<h1>New Feature</h1>
-			<form method="post" action="https://postman-echo.com/post">
+			<form id="form" method="post" action="/new-feature">
 				<div class="mb-3 mt-3">
 					<label for="name" class="form-label">Name:</label>
 					<input type="text" class="form-control" id="name" placeholder="Input feature" name="name" required>
