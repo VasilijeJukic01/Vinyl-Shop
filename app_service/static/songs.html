@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+	<script src="script/songs.js"></script>
 	<head>
 		<title>Vinyl Whirl</title>
 		<meta charset="utf-8">
@@ -14,26 +15,21 @@
 				<nav class="navbar navbar-expand-sm bg-light navbar-light">
 					<div class="container-fluid">
 						<div class="navbar-header">
-							<a class="navbar-brand">
-								<img src="logo.png" alt="logo" width="380" height="100">
-							</a>
+							<a class="navbar-brand"><img src="logo.png" alt="logo" width="380" height="100"></a>
 						</div>
 						<ul class="navbar-nav">
-							<li class="nav-item">
-								<a class="nav-link" href="index.html">Dashboard</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="songs.html">Offer</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link active" href="orders.html">Orders</a>
-							</li>
+							<li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+							<li class="nav-item"><a class="nav-link active" href="songs.html">Offer</a></li>
+							<li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
+							<li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+							<li class="nav-item"><a class="nav-link" href="orders.html">Orders</a></li>
 						</ul>
 					</div>
 				</nav>
 				<nav class="navbar navbar-expand-sm bg-warning navbar-dark"></nav>
 			</div>
-			<h1>Orders</h1>
+			<a href="new-song.html" class="btn btn-primary float-end">New Song</a>
+			<h1>Songs</h1>
 			<html lang="en">
 				<head>
 				  <meta charset="utf-8">
@@ -47,32 +43,15 @@
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Schedule time</th>
-									<th>Status</th>
+									<th>Song</th>
+									<th>Performer</th>
+									<th>Category</th>
+									<th>Description</th>
 									<th>Price</th>
-									<th>Address</th>
-									<th>Content of the order</th>
 									<th>Action</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>5.10.2023 18:30</td>
-									<td>New</td>
-									<td>2499</td>
-									<td>Kralja Milana 12/2</td>
-									<td>Golden Brown - The Stranglers (x1)</td>
-									<td><a href="order.html?id=1">Details</a></td>
-								</tr>
-								<tr>
-									<td>6.10.2023 12:00</td>
-									<td>Accepted</td>
-									<td>2799</td>
-									<td>Knez Mihailova 6/6</td>
-									<td>Sweet Child o' Mine - Guns N Roses (x1)</td>
-									<td><a href="order.html?id=1">Details</a></td>
-								</tr>
-							</tbody>
+							<tbody id="list"></tbody>
 						</table>
 					</div>
 				</body>
