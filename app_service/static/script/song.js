@@ -51,18 +51,26 @@ window.addEventListener("load", function(){
 	let url = new URL(window.location.href);
 	id = url.searchParams.get("id");
 
-	fetch(`http://localhost:8000/song/${id}`)
-		.then(resp => resp.json())
-		.then(data => {
-			if (data) {
-				const { name, performer, description, category_id, price, features } = data;
+	const songFetch = fetch(`http://localhost:8000/song/${id}`)
+		.then(resp => resp.json());
+	const categoriesFetch = fetch("http://localhost:8000/category")
+		.then(resp => resp.json());
+
+	Promise.all([songFetch, categoriesFetch])
+		.then(([songData, categoriesData]) => {
+			if (songData) {
+				const { name, performer, description, category_id, price, features } = songData;
 				document.getElementById("name").value = name;
 				document.getElementById("performer").value = performer;
 				document.getElementById("description").value = description;
-				document.getElementById("category").value = category_id;
 				document.getElementById("price").value = price;
 
 				if (features) features.forEach(addFeature);
+				categoriesData.forEach(category => {
+					const option = createHTMLElement("option", [], { value: category.id }, category.name);
+					document.getElementById("category").appendChild(option);
+				});
+				document.getElementById("category").value = category_id;
 			}
 		})
 		.catch(err => console.log(err));
@@ -117,7 +125,7 @@ window.addEventListener("load", function(){
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newSong)
 			})
-				.then(succ=>succ.json())
+				.then(succ=> succ.json())
 				.then(() => {
 					window.location.href='/songs.html';
 				})

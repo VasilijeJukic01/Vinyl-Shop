@@ -22,9 +22,10 @@ const createSong = async (songData) => {
 
 const updateSong = async (id, songData) => {
     const song = await Song.findByPk(id);
-    const { name, description, price, category_id } = songData;
+    const {name, performer, description, price, category_id} = songData;
 
     song.name = name;
+    song.performer = performer;
     song.description = description;
     song.price = price;
     song.category_id = category_id;
