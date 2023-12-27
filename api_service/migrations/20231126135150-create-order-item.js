@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      command: {
+      amount: {
         allowNull: false,
         type: Sequelize.INTEGER
       },

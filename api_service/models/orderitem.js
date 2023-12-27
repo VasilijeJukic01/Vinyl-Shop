@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 		unique: true,
 		allowNull: false
 	},
-	command: {
+	amount: {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},

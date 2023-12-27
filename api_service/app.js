@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 const corsOptions = {
-    origin: ['http://localhost:9000', 'http://127.0.0.1:9000']
+    origin: ['http://localhost:9000', 'http://127.0.0.1:9000', 'http://localhost:8080', 'http://127.0.0.1:8080']
 };
 
 app.use(cors(corsOptions));
@@ -17,6 +17,7 @@ const routes = {
     '/song': require('./routes/song.js'),
     '/category': require('./routes/category.js'),
     '/order': require('./routes/order.js'),
+    '/orderitem': require('./routes/orderitem.js'),
     '/feature': require('./routes/feature.js'),
 };
 
