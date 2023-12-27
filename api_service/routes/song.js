@@ -1,5 +1,5 @@
 const express = require("express");
-const { Song } = require("../models");
+const { Song, Category } = require("../models");
 const { handleRoute } = require("./crudhelper");
 const route = express.Router();
 
@@ -9,7 +9,12 @@ route.use(express.urlencoded({ extended: true }));
 module.exports = route;
 
 const getAllSongs = async () => {
-    return await Song.findAll();
+    return await Song.findAll({
+        include: [{
+            model: Category,
+            as: 'categories'
+        }]
+    });
 };
 
 const getSongById = async (id) => {
