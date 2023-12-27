@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+	<script src="script/orders.js"></script>
 	<head>
 		<base href="http://localhost:9000/admin/">
 		<title>Vinyl Whirl</title>
@@ -47,28 +48,12 @@
 									<th>Status</th>
 									<th>Price</th>
 									<th>Address</th>
+									<th>Phone</th>
 									<th>Content of the order</th>
-									<th>Action</th>
+									<th>Details</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>5.10.2023 18:30</td>
-									<td>New</td>
-									<td>2499</td>
-									<td>Kralja Milana 12/2</td>
-									<td>Golden Brown - The Stranglers (x1)</td>
-									<td><a href="order.html?id=1">Details</a></td>
-								</tr>
-								<tr>
-									<td>6.10.2023 12:00</td>
-									<td>Accepted</td>
-									<td>2799</td>
-									<td>Knez Mihailova 6/6</td>
-									<td>Sweet Child o' Mine - Guns N Roses (x1)</td>
-									<td><a href="order.html?id=1">Details</a></td>
-								</tr>
-							</tbody>
+							<tbody id="list"></tbody>
 						</table>
 					</div>
 				</body>
