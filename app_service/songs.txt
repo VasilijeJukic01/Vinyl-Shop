@@ -1,4 +1,0 @@
-{"name":"Golden Brown","performer":"The Stranglers","category":"1","description":"/","price":"2499"}
-{"name":"You Win Again","performer":"Bee Gees","category":"1","description":"/","price":"2999"}
-{"name":"Sweet Child o' Mine","performer":"Guns N Roses","category":"2","description":"/","price":"2799"}
-{"name":"Thriller","performer":"Michael Jackson","category":"1","description":"/","price":"2399"}

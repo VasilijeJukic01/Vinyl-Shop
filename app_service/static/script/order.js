@@ -1,4 +1,6 @@
 let id = null;
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -15,19 +17,31 @@ window.addEventListener("load", function(){
     let url = new URL(window.location.href);
     let id = url.searchParams.get("id");
 
-    fetch(`http://localhost:8000/order/${id}`)
+    fetch(`http://localhost:8000/order/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => response.json())
         .then(order => {
             document.querySelector(".row dt:nth-child(1) + dd").textContent = formatDate(order.schedule_time);
             document.querySelector(".row dt:nth-child(3) + dd").textContent = order.address;
             document.querySelector("#status").value = order.status;
 
-            return fetch(`http://localhost:8000/orderitem/?order_id=${id}`);
+            return fetch(`http://localhost:8000/orderitem/?order_id=${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
         })
         .then(response => response.json())
         .then(orderItems => {
             const songPromises = orderItems.map(item => {
-                return fetch(`http://localhost:8000/song/${item.song_id}`)
+                return fetch(`http://localhost:8000/song/${item.song_id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                     .then(response => response.json())
                     .then(song => ({...item, song}));
             });
@@ -38,9 +52,8 @@ window.addEventListener("load", function(){
             const content = itemsWithSongs.map(item => {
                 if (item.song) {
                     return `${item.song.name} - ${item.song.performer} (x${item.amount})`;
-                } else {
-                    return '';
                 }
+                else return '';
             }).join(', ');
             document.querySelector("#content").innerHTML = `<li>${content}</li>`;
 

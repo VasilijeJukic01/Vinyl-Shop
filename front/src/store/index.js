@@ -5,12 +5,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    token: '',
     songs: [],
     selectedSongs: [],
     currentPage: 1,
     itemsPerPage: 3
   },
   mutations: {
+    setToken (state, token) {
+      state.token = token
+      localStorage.token = token
+    },
+    removeToken (state) {
+      state.token = ''
+      localStorage.token = ''
+      console.log('Token removed')
+    },
     setSongs (state, songs) {
       state.songs = songs
     },
@@ -25,6 +35,30 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async register ({ commit }, obj) {
+      console.log(JSON.stringify(obj))
+      const response = await fetch('http://127.0.0.1:8001/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj)
+      })
+
+      const json = await response.json()
+      commit('setToken', json.token)
+    },
+
+    async login ({ commit }, obj) {
+      const response = await fetch('http://127.0.0.1:8001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj)
+      })
+
+      const json = await response.json()
+      if (json.token) {
+        commit('setToken', json.token)
+      } else { alert('Login failed') }
+    },
     async fetchSongs (context) {
       const response = await fetch('http://localhost:8000/song/')
       const songs = await response.json()

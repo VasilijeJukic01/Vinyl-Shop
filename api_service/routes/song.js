@@ -1,6 +1,7 @@
 const express = require("express");
 const { Song, Category } = require("../models");
 const { handleRoute } = require("./crudhelper");
+const { authAdminToken } = require("../security/verifier");
 const route = express.Router();
 
 route.use(express.json());
@@ -53,14 +54,14 @@ route.get("/:id", async (req, res) => {
     await handleRoute(req, res, getSongById);
 });
 
-route.post("/", async (req, res) => {
+route.post("/", authAdminToken, async (req, res) => {
     await handleRoute(req, res, createSong);
 });
 
-route.put("/:id", async (req, res) => {
+route.put("/:id", authAdminToken, async (req, res) => {
     await handleRoute(req, res, updateSong);
 });
 
-route.delete("/:id", async (req, res) => {
+route.delete("/:id", authAdminToken, async (req, res) => {
     await handleRoute(req, res, deleteSong);
 });

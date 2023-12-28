@@ -1,5 +1,13 @@
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
+
 function fetchSongCategory(categoryId) {
-	return fetch(`http://localhost:8000/category/${categoryId}`)
+
+	return fetch(`http://localhost:8000/category/${categoryId}`, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		}
+	})
 		.then(response => response.json());
 }
 
@@ -34,7 +42,11 @@ function createTableRow(song, category) {
 }
 
 function dataFetch() {
-	fetch('http://localhost:8000/song/')
+	fetch('http://localhost:8000/song/',{
+		headers: {
+			'Authorization': `Bearer ${token}`
+		}
+	})
 		.then(response => response.json())
 		.then(data => {
 			console.log(data);

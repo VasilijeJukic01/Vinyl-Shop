@@ -1,6 +1,7 @@
 const express = require("express");
 const { Order } = require("../models");
 const { handleRoute } = require("./crudhelper");
+const { authAdminToken, authUserToken } = require("../security/verifier");
 const route = express.Router();
 
 route.use(express.json());
@@ -33,22 +34,22 @@ const deleteOrder = async (id) => {
     return order.id;
 };
 
-route.get("/", async (req, res) => {
+route.get("/", authAdminToken, async (req, res) => {
     await handleRoute(req, res, getAllOrders);
 });
 
-route.get("/:id", async (req, res) => {
+route.get("/:id", authAdminToken, async (req, res) => {
     await handleRoute(req, res, getOrderById);
 });
 
-route.post("/", async (req, res) => {
+route.post("/", [authAdminToken, authUserToken],async (req, res) => {
     await handleRoute(req, res, createOrder);
 });
 
-route.put("/:id", async (req, res) => {
+route.put("/:id", [authAdminToken, authUserToken], async (req, res) => {
     await handleRoute(req, res, updateOrder);
 });
 
-route.delete("/:id", async (req, res) => {
+route.delete("/:id", authAdminToken, async (req, res) => {
     await handleRoute(req, res, deleteOrder);
 });
