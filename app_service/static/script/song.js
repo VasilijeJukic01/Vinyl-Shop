@@ -1,5 +1,6 @@
-
 let id = null;
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
 
 function validation() {
 	const nameInput = document.getElementById("name");
@@ -51,9 +52,17 @@ window.addEventListener("load", function(){
 	let url = new URL(window.location.href);
 	id = url.searchParams.get("id");
 
-	const songFetch = fetch(`http://localhost:8000/song/${id}`)
+	const songFetch = fetch(`http://localhost:8000/song/${id}`, {
+		headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		})
 		.then(resp => resp.json());
-	const categoriesFetch = fetch("http://localhost:8000/category")
+	const categoriesFetch = fetch("http://localhost:8000/category", {
+		headers: {
+				'Authorization': `Bearer ${token}`
+			}
+	})
 		.then(resp => resp.json());
 
 	Promise.all([songFetch, categoriesFetch])
@@ -92,7 +101,7 @@ window.addEventListener("load", function(){
 
 		fetch("http://localhost:8000/song/", {
 			method: "POST",
-			headers: { 'Content-Type' : 'application/json' },
+			headers: { 'Content-Type' : 'application/json', 'Authorization': `Bearer ${token}` },
 			body: JSON.stringify(newSong)
 		})
 			.then(succ => succ.json())
@@ -122,7 +131,7 @@ window.addEventListener("load", function(){
 
 			fetch(`http://localhost:8000/song/${id}`, {
 				method : "PUT",
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
 				body: JSON.stringify(newSong)
 			})
 				.then(succ=> succ.json())
@@ -137,7 +146,10 @@ window.addEventListener("load", function(){
 	if (deleteButton) {
 		deleteButton.addEventListener("click", function() {
 			if(confirm("Are you sure?")){
-				fetch(`http://localhost:8000/song/${id}`, {method : "DELETE"})
+				fetch(`http://localhost:8000/song/${id}`, {
+					headers : { 'Authorization': `Bearer ${token}` },
+					method : "DELETE"
+				})
 					.then(resp => resp.json())
 					.then(data => {
 						alert("Deleted song with id "+data);
@@ -166,7 +178,11 @@ window.addEventListener("load", function(){
 
 	const selector = document.getElementById("category");
 	if (selector) {
-		fetch("http://localhost:8000/category")
+		fetch("http://localhost:8000/category", {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+		})
 			.then(resp => resp.json())
 			.then(data => {
 				data.forEach(category => {
@@ -179,7 +195,11 @@ window.addEventListener("load", function(){
 
 	const featureSelector = document.getElementById("feature-list");
 	if (featureSelector) {
-		fetch("http://localhost:8000/feature")
+		fetch("http://localhost:8000/feature", {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+		})
 			.then(resp => resp.json())
 			.then(data => {
 				data.forEach(feature => {

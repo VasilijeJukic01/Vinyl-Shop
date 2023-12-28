@@ -1,3 +1,6 @@
+const cookies = document.cookie.split('=');
+const token = document.cookie.split('=')[document.cookie.split('=').length - 1];
+
 function createTableCell(value) {
     const td = document.createElement("td");
     td.innerHTML = value;
@@ -45,11 +48,19 @@ function createTableRow(order, orderItems) {
 function dataFetch() {
     let allOrderItems = [];
 
-    fetch('http://localhost:8000/orderitem/')
+    fetch('http://localhost:8000/orderitem/', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => response.json())
         .then(orderItems => {
             allOrderItems = orderItems;
-            return fetch('http://localhost:8000/order/');
+            return fetch('http://localhost:8000/order/', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
         })
         .then(response => response.json())
         .then(orders => {
@@ -60,7 +71,11 @@ function dataFetch() {
                 const orderItems = allOrderItems.filter(item => item.order_id === order.id);
 
                 const songPromises = orderItems.map(item => {
-                    return fetch(`http://localhost:8000/song/${item.song_id}`)
+                    return fetch(`http://localhost:8000/song/${item.song_id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
                         .then(response => response.json())
                         .then(song => ({...item, song}));
                 });

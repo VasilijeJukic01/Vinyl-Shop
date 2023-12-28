@@ -1,5 +1,6 @@
-
 let id = null;
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
 
 function validation() {
     const nameInput = document.getElementById("name");
@@ -21,7 +22,11 @@ window.addEventListener("load", function(){
     let url = new URL(window.location.href);
     id = url.searchParams.get("id");
 
-    fetch(`http://localhost:8000/feature/${id}`)
+    fetch(`http://localhost:8000/feature/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(resp => resp.json())
         .then(data => {
             if (data) {
@@ -44,7 +49,7 @@ window.addEventListener("load", function(){
 
         fetch("http://localhost:8000/feature/", {
             method : "POST",
-            headers: { 'Content-Type' : 'application/json' },
+            headers: { 'Content-Type' : 'application/json' , 'Authorization': `Bearer ${token}`},
             body: JSON.stringify(newFeature)
         })
             .then(succ => succ.json())
@@ -69,7 +74,7 @@ window.addEventListener("load", function(){
 
             fetch(`http://localhost:8000/feature/${id}`, {
                 method : "PUT",
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(newFeature)
             })
                 .then(succ=>succ.json())
@@ -84,7 +89,10 @@ window.addEventListener("load", function(){
     if (deleteButton) {
         deleteButton.addEventListener("click", function() {
             if (confirm("Are you sure?")) {
-                fetch(`http://localhost:8000/feature/${id}`, { method: "DELETE" })
+                fetch(`http://localhost:8000/feature/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    method: "DELETE"
+                })
                     .then(resp => resp.json())
                     .then(data => {
                         alert("Deleted feature with id " + data);

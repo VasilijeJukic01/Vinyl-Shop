@@ -1,3 +1,6 @@
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
+
 function createTableCell(value) {
     const td = document.createElement("td");
     td.innerHTML = value;
@@ -14,7 +17,6 @@ function createEditLink(featureId) {
 
 function createTableRow(feature) {
     const tr = document.createElement("tr");
-
     tr.appendChild(createTableCell(feature.name));
 
     const editCell = document.createElement("td");
@@ -25,7 +27,11 @@ function createTableRow(feature) {
 }
 
 function dataFetch() {
-    fetch('http://localhost:8000/feature/')
+    fetch('http://localhost:8000/feature/', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => response.json())
         .then(data => {
             console.log(data);

@@ -1,3 +1,6 @@
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
+
 function createTableCell(value) {
     const td = document.createElement("td");
     td.innerHTML = value;
@@ -24,7 +27,11 @@ function createTableRow(category) {
 }
 
 function dataFetch() {
-    fetch('http://localhost:8000/category/')
+    fetch('http://localhost:8000/category/', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => response.json())
         .then(data => {
             console.log(data);
