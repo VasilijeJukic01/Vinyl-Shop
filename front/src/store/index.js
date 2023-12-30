@@ -25,13 +25,27 @@ export default new Vuex.Store({
       state.songs = songs
     },
     selectSong (state, song) {
-      state.selectedSongs.push({ id: song.id, amount: song.amount, price: song.price })
+      state.selectedSongs.push({
+        id: song.id,
+        name: song.name,
+        performer: song.performer,
+        categories: song.categories,
+        amount: song.amount,
+        price: song.price,
+        delete: 1
+      })
     },
     clearSelectedSongs (state) {
       state.selectedSongs = []
     },
     setCurrentPage (state, page) {
       state.currentPage = page
+    },
+    removeSong (state, song) {
+      const index = state.selectedSongs.findIndex(s => s.id === song.id)
+      if (index !== -1) {
+        state.selectedSongs.splice(index, 1)
+      }
     }
   },
   actions: {

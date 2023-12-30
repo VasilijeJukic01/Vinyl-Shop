@@ -78,7 +78,7 @@ export default {
       const response = await fetch('http://localhost:8000/order/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json', Authorization: `Bearer ${this.$store.state.token}`
         },
         body: JSON.stringify(this.order)
       })
@@ -87,7 +87,7 @@ export default {
         await fetch('http://localhost:8000/orderitem/', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json', Authorization: `Bearer ${this.$store.state.token}`
           },
           body: JSON.stringify({ order_id: data.id, song_id: song.id, amount: song.amount, price: song.price })
         })

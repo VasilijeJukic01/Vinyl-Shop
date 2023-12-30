@@ -20,7 +20,10 @@
           </li>
         </ul>
       </div>
-      <b-button squared variant="success" @click="goToOrder">Order Selected Songs</b-button>
+      <div class="button-container">
+        <b-button squared variant="success" @click="goToOrder">Order Selected Songs</b-button>
+        <b-button squared variant="success" @click="goToCart">Go to Cart</b-button>
+      </div>
     </b-container>
     <div class="background-bottom"></div>
   </div>
@@ -60,6 +63,9 @@ export default {
       localStorage.setItem('selectedSongs', JSON.stringify(this.$store.state.selectedSongs))
       this.$router.push('/order')
     },
+    goToCart () {
+      this.$router.push('/cart')
+    },
     nextPage () {
       if (this.currentPage < this.totalPages) {
         this.currentPage++
@@ -85,6 +91,17 @@ h1 {
   color: #333;
   font-size: 2em;
   margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.b-button {
+  margin: 10px;
 }
 
 .navbar a.router-link-exact-active {
