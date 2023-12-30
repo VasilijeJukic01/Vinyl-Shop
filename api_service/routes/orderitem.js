@@ -2,7 +2,14 @@ const express = require("express");
 const { OrderItem } = require("../models");
 const { handleRoute } = require("./crudhelper");
 const { authAdminToken } = require("../security/verifier");
+const Joi = require('joi');
 const route = express.Router();
+
+const orderItemSchema = Joi.object({
+    orderId: Joi.number(0).required(),
+    productId: Joi.number(0).required(),
+    quantity: Joi.number(0).required().min(1)
+});
 
 route.use(express.json());
 route.use(express.urlencoded({ extended: true }));
@@ -42,7 +49,9 @@ route.get("/:id", async (req, res) => {
     await handleRoute(req, res, getOrderItemById);
 });
 
-route.post("/", authAdminToken, async (req, res) => {
+route.post("/", async (req, res) => {
+    const { error } = orderItemSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
     const orderItemData = req.body
     const orderItem = await createOrderItem(orderItemData)
     res.json(orderItem)

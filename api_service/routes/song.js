@@ -2,7 +2,16 @@ const express = require("express");
 const { Song, Category } = require("../models");
 const { handleRoute } = require("./crudhelper");
 const { authAdminToken } = require("../security/verifier");
+const Joi = require('joi');
 const route = express.Router();
+
+const songSchema = Joi.object({
+    name: Joi.string().min(3).required(),
+    performer: Joi.string().required(),
+    description: Joi.string().required(),
+    price: Joi.number(0).required().min(0),
+    category_id: Joi.number(0).required().min(1)
+});
 
 route.use(express.json());
 route.use(express.urlencoded({ extended: true }));
@@ -55,6 +64,8 @@ route.get("/:id", async (req, res) => {
 });
 
 route.post("/", authAdminToken, async (req, res) => {
+    const { error } = songSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
     await handleRoute(req, res, createSong);
 });
 
