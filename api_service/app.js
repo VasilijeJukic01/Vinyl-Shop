@@ -19,6 +19,7 @@ const routes = {
     '/order': require('./routes/order.js'),
     '/orderitem': require('./routes/orderitem.js'),
     '/feature': require('./routes/feature.js'),
+    '/songfeature': require('./routes/songfeature.js'),
 };
 
 Object.entries(routes).forEach(([path, route]) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 const { Song, Category } = require("../models");
 const { handleRoute } = require("./crudhelper");
-const { authAdminToken } = require("../security/verifier");
+const { authAdminToken, authUserToken } = require("../security/verifier");
 const Joi = require('joi');
 const route = express.Router();
 
@@ -9,8 +9,8 @@ const songSchema = Joi.object({
     name: Joi.string().min(3).required(),
     performer: Joi.string().required(),
     description: Joi.string().required(),
-    price: Joi.number(0).required().min(0),
-    category_id: Joi.number(0).required().min(1)
+    price: Joi.number().required().min(0),
+    category_id: Joi.number().required().min(1)
 });
 
 route.use(express.json());
@@ -55,11 +55,11 @@ const deleteSong = async (id) => {
     return song.id;
 };
 
-route.get("/", async (req, res) => {
+route.get("/", authUserToken, async (req, res) => {
     await handleRoute(req, res, getAllSongs);
 });
 
-route.get("/:id", async (req, res) => {
+route.get("/:id", authUserToken, async (req, res) => {
     await handleRoute(req, res, getSongById);
 });
 

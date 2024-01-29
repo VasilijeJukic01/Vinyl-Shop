@@ -6,8 +6,8 @@ const Joi = require('joi');
 const route = express.Router();
 
 const orderSchema = Joi.object({
-    userId: Joi.number(0).required(),
-    totalPrice: Joi.number(0).required().min(0)
+    userId: Joi.number().required(),
+    totalPrice: Joi.number().required().min(0)
 });
 
 route.use(express.json());
@@ -48,7 +48,7 @@ route.get("/:id", authAdminToken, async (req, res) => {
     await handleRoute(req, res, getOrderById);
 });
 
-route.post("/", async (req, res) => {
+route.post("/", authUserToken, async (req, res) => {
     const { error } = orderSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     await handleRoute(req, res, createOrder);

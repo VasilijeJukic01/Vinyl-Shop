@@ -18,12 +18,10 @@ module.exports = (sequelize, DataTypes) => {
   SongFeature.init({
     song_id: {
 		type: DataTypes.INTEGER,
-		unique: true,
 		allowNull: false
 	},
     feature_id: {
 		type: DataTypes.INTEGER,
-		unique: true,
 		allowNull: false
 	}
   }, {

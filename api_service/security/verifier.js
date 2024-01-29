@@ -24,7 +24,7 @@ function authUserToken(req, res, next) {
     if (token == null) return res.status(401).json({ msg: 'Unauthorized' });
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err || !user || user.user === 'admin') {
+        if (err || !user) {
             return res.status(403).json({ msg: 'Forbidden' });
         }
 

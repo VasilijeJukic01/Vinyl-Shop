@@ -74,7 +74,9 @@ export default new Vuex.Store({
       } else { alert('Login failed') }
     },
     async fetchSongs (context) {
-      const response = await fetch('http://localhost:8000/song/')
+      const response = await fetch('http://localhost:8000/song/', {
+        headers: { Authorization: `Bearer ${context.state.token}` }
+      })
       const songs = await response.json()
       context.commit('setSongs', songs)
     }

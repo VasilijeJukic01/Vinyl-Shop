@@ -1,14 +1,14 @@
 const express = require("express");
 const { OrderItem } = require("../models");
 const { handleRoute } = require("./crudhelper");
-const { authAdminToken } = require("../security/verifier");
+const { authAdminToken, authUserToken } = require("../security/verifier");
 const Joi = require('joi');
 const route = express.Router();
 
 const orderItemSchema = Joi.object({
-    orderId: Joi.number(0).required(),
-    productId: Joi.number(0).required(),
-    quantity: Joi.number(0).required().min(1)
+    orderId: Joi.number().required(),
+    productId: Joi.number().required(),
+    quantity: Joi.number().required().min(1)
 });
 
 route.use(express.json());
@@ -41,15 +41,15 @@ const deleteOrderItem = async (id) => {
     return orderItem.id;
 };
 
-route.get("/", async (req, res) => {
+route.get("/", authUserToken, async (req, res) => {
     await handleRoute(req, res, getAllOrdersItems);
 });
 
-route.get("/:id", async (req, res) => {
+route.get("/:id", authUserToken, async (req, res) => {
     await handleRoute(req, res, getOrderItemById);
 });
 
-route.post("/", async (req, res) => {
+route.post("/", authUserToken, async (req, res) => {
     const { error } = orderItemSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const orderItemData = req.body

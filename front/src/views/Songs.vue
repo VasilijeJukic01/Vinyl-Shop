@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     async fetchSongs () {
-      this.$store.dispatch('fetchSongs')
+      await this.$store.dispatch('fetchSongs')
     },
     selectSong (song) {
       this.$store.commit('selectSong', song)

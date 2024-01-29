@@ -15,12 +15,13 @@ function getCookies(req) {
 }
 
 function authToken(req, res, next) {
+
     const cookies = getCookies(req);
     const token = cookies['token'];
-    if (token == null) return res.redirect(301, '/login');
+    if (token == null) return res.redirect(301, 'administrator/login');
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.redirect(301, '/login');
+        if (err) return res.redirect(301, 'administrator/login');
         req.user = user;
         next();
     });
@@ -28,22 +29,22 @@ function authToken(req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'static')));
 
-// Serve Vue.js app
-app.use('/', express.static(path.join(__dirname, 'dist')));
-
-// Serve admin interface
-app.use('/administrator', express.static(path.join(__dirname, 'static')));
-
-app.get('/administrator/register', (req, res) => {
-    res.sendFile('register.html', { root: './static/administrator' });
-});
-
 app.get('/administrator/login', (req, res) => {
     res.sendFile('login.html', { root: './static/administrator' });
 });
 
 app.get('/administrator', authToken, (req, res) => {
-    res.sendFile('index.html', { root: './static/administrator' });
+    res.sendFile('index.html', { root: './static' });
+});
+
+app.use('/administrator', express.static(path.join(__dirname, 'static')));
+app.get('/administrator/*', authToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', `${req.params[0]}.html`));
+});
+
+app.use(express.static(path.join(__dirname, 'static')));
+app.get('*', authToken, (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
 app.listen(9000, () => {

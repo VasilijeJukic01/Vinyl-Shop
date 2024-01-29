@@ -1,7 +1,7 @@
 const express = require("express");
 const { Feature } = require("../models");
 const { handleRoute } = require("./crudhelper");
-const { authAdminToken } = require("../security/verifier");
+const { authAdminToken, authUserToken } = require("../security/verifier");
 const Joi = require('joi');
 const route = express.Router();
 
@@ -39,11 +39,11 @@ const deleteFeature = async (id) => {
     return feature.id;
 };
 
-route.get("/", async (req, res) => {
+route.get("/", authUserToken, async (req, res) => {
     await handleRoute(req, res, getAllFeatures);
 });
 
-route.get("/:id", async (req, res) => {
+route.get("/:id", authUserToken, async (req, res) => {
     await handleRoute(req, res, getFeatureById);
 });
 
