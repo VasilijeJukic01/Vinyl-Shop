@@ -15,7 +15,7 @@ function formatDate(dateString) {
 
 window.addEventListener("load", function(){
     let url = new URL(window.location.href);
-    let id = url.searchParams.get("id");
+    id = url.searchParams.get("id");
 
     fetch(`http://localhost:8000/order/${id}`, {
         headers: {
@@ -36,29 +36,49 @@ window.addEventListener("load", function(){
         })
         .then(response => response.json())
         .then(orderItems => {
-            const songPromises = orderItems.map(item => {
-                return fetch(`http://localhost:8000/song/${item.song_id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(song => ({...item, song}));
-            });
+            console.log('All order items:', orderItems);
+            const filteredOrderItems = orderItems.filter(item => item.order_id === Number(id));
+            console.log('Filtered order items:', filteredOrderItems);
+            const songPromises = filteredOrderItems
+                .map(item => {
+                    return fetch(`http://localhost:8000/song/${item.song_id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(song => ({...item, song}));
+                });
 
             return Promise.all(songPromises);
         })
         .then(itemsWithSongs => {
-            const content = itemsWithSongs.map(item => {
+            document.querySelector("#content").innerHTML = itemsWithSongs.map(item => {
                 if (item.song) {
-                    return `${item.song.name} - ${item.song.performer} (x${item.amount})`;
+                    return `- ${item.song.name} - ${item.song.performer} (x${item.amount})`;
                 }
                 else return '';
-            }).join(', ');
-            document.querySelector("#content").innerHTML = `<li>${content}</li>`;
-
+            }).join('<br>');
             document.querySelector(".row dt:nth-child(7) + dd").textContent =
                 itemsWithSongs.reduce((total, item) => total + item.price * item.amount, 0);
         })
         .catch(error => console.error('Error:', error));
 });
+
+function updateStatus() {
+    let url = new URL(window.location.href);
+    let id = url.searchParams.get("id");
+
+    const status = document.getElementById('status').value;
+    fetch(`http://localhost:8000/order/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+}

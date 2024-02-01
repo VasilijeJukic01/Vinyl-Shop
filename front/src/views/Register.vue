@@ -6,8 +6,8 @@
         <b-form-input id="email" v-model="form.email" type="email" placeholder="Enter email"
                       required class="short-input center-input"></b-form-input>
       </b-form-group>
-      <b-form-group label="User Name:" label-for="name">
-        <b-form-input id="username" v-model="form.name" placeholder="Enter name" required class="short-input center-input"></b-form-input>
+      <b-form-group label="User Name:" label-for="username">
+        <b-form-input id="username" v-model="form.username" placeholder="Enter name" required class="short-input center-input"></b-form-input>
       </b-form-group>
       <b-form-group label="Password:" label-for="password">
         <b-form-input id="password" v-model="form.password" type="password" placeholder="Enter password"

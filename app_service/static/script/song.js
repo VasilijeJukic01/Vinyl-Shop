@@ -1,4 +1,5 @@
 let id = null;
+let featuresData = null;
 const cookies = document.cookie.split('=');
 const token = cookies[cookies.length - 1];
 
@@ -53,28 +54,30 @@ window.addEventListener("load", function(){
 	id = url.searchParams.get("id");
 
 	const songFetch = fetch(`http://localhost:8000/song/${id}`, {
-		headers: {
-				'Authorization': `Bearer ${token}`
-			}
+		headers: { 'Authorization': `Bearer ${token}` }
 		})
 		.then(resp => resp.json());
 	const categoriesFetch = fetch("http://localhost:8000/category", {
-		headers: {
-				'Authorization': `Bearer ${token}`
-			}
+		headers: { 'Authorization': `Bearer ${token}` }
 	})
 		.then(resp => resp.json());
+	const featuresFetch = fetch(`http://localhost:8000/songfeature/song/${id}`, {
+		headers: { 'Authorization': `Bearer ${token}` }
+	})
+		.then(resp => resp.json())
+		.then(data => {
+			featuresData = data;
+		});
 
-	Promise.all([songFetch, categoriesFetch])
+	Promise.all([songFetch, categoriesFetch, featuresFetch])
 		.then(([songData, categoriesData]) => {
 			if (songData) {
-				const { name, performer, description, category_id, price, features } = songData;
+				const { name, performer, description, category_id, price } = songData;
 				document.getElementById("name").value = name;
 				document.getElementById("performer").value = performer;
 				document.getElementById("description").value = description;
 				document.getElementById("price").value = price;
 
-				if (features) features.forEach(addFeature);
 				categoriesData.forEach(category => {
 					const option = createHTMLElement("option", [], { value: category.id }, category.name);
 					document.getElementById("category").appendChild(option);
@@ -136,7 +139,23 @@ window.addEventListener("load", function(){
 			})
 				.then(succ=> succ.json())
 				.then(() => {
-					window.location.href='/songs.html';
+					const features = Array.from(document.querySelectorAll("#features > span")).map(span => span.dataset.id);
+					features.forEach(feature => {
+						const newSongFeature = {
+							song_id: id,
+							feature_id: feature
+						};
+
+						fetch("http://localhost:8000/songfeature/", {
+							method: "POST",
+							headers: { 'Content-Type' : 'application/json', 'Authorization': `Bearer ${token}` },
+							body: JSON.stringify(newSongFeature)
+						})
+							.then(succ => succ.json())
+							.catch(err => console.log(err));
+					});
+
+					//window.location.href='administrator/songs.html';
 				})
 				.catch(err => console.log(err));
 		});
@@ -196,9 +215,7 @@ window.addEventListener("load", function(){
 	const featureSelector = document.getElementById("feature-list");
 	if (featureSelector) {
 		fetch("http://localhost:8000/feature", {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
+				headers: { 'Authorization': `Bearer ${token}` }
 		})
 			.then(resp => resp.json())
 			.then(data => {
@@ -206,6 +223,7 @@ window.addEventListener("load", function(){
 					const option = createHTMLElement("option", [], { value: feature.id }, feature.name);
 					featureSelector.appendChild(option);
 				});
+				if (featuresData) featuresData.forEach(feature => addFeature(feature.feature_id));
 			})
 			.catch(err => console.log(err));
 	}

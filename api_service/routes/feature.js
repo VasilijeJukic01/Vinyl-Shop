@@ -1,8 +1,13 @@
 const express = require("express");
 const { Feature } = require("../models");
 const { handleRoute } = require("./crudhelper");
-const { authAdminToken } = require("../security/verifier");
+const { authAdminToken, authUserToken } = require("../security/verifier");
+const Joi = require('joi');
 const route = express.Router();
+
+const featureSchema = Joi.object({
+    name: Joi.string().required()
+});
 
 route.use(express.json());
 route.use(express.urlencoded({ extended: true }));
@@ -34,15 +39,17 @@ const deleteFeature = async (id) => {
     return feature.id;
 };
 
-route.get("/", async (req, res) => {
+route.get("/", authUserToken, async (req, res) => {
     await handleRoute(req, res, getAllFeatures);
 });
 
-route.get("/:id", async (req, res) => {
+route.get("/:id", authUserToken, async (req, res) => {
     await handleRoute(req, res, getFeatureById);
 });
 
 route.post("/", authAdminToken, async (req, res) => {
+    const { error } = featureSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
     await handleRoute(req, res, createFeature);
 });
 

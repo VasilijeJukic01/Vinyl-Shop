@@ -30,14 +30,14 @@ const routes = [
     component: () => import('@/views/Songs.vue')
   },
   {
-    path: '/song/:id',
-    name: 'song-details',
-    component: () => import('@/views/SongDetails.vue')
-  },
-  {
     path: '/order',
     name: 'order',
     component: () => import('@/views/Order.vue')
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('@/views/Cart.vue')
   }
 ]
 

@@ -2,8 +2,8 @@
   <div id="app">
     <h1>Explore</h1>
     <b-form @submit="onSubmit">
-      <b-form-group label="User Name:" label-for="name">
-        <b-form-input id="name" v-model="form.name" placeholder="Enter name"
+      <b-form-group label="User Name:" label-for="username">
+        <b-form-input id="username" v-model="form.username" placeholder="Enter name"
                       required class="short-input center-input"></b-form-input>
       </b-form-group>
       <b-form-group label="Password:" label-for="password">
