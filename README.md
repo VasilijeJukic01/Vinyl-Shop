@@ -64,17 +64,17 @@ This project is a full-stack web application that consists of 3 backend services
   cd api-service
   npm install
 ```
-- App service stup
+- App service setup
  ```
   cd app-service
   npm install
 ```
-- Auth service stup
+- Auth service setup
 ```
   cd auth-service
   npm install
 ```
-<b>2. Frontend stup</b>
+<b>2. Frontend setup</b>
 ```
 cd front
 npm install --force
